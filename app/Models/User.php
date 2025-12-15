@@ -21,7 +21,26 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'studentnummer',
+        'rol',
+        'opleiding',
+        'klas',
     ];
+
+    public function inschrijvingen()
+    {
+        return $this->hasMany(Inschrijving::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->rol === 'admin';
+    }
+
+    public function isStudent()
+    {
+        return $this->rol === 'student';
+    }
 
     /**
      * The attributes that should be hidden for serialization.

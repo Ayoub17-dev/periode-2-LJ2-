@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('studentnummer')->nullable()->unique(); // Voor studenten
+            $table->string('rol')->default('student');  // student, admin, slber
+            $table->string('opleiding')->nullable();    // Bijv: Software & Online
+            $table->string('klas')->nullable();         // Bijv: SD2A
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

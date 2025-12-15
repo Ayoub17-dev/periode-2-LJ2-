@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('inschrijvingen', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');      // Welke student
+            $table->foreignId('keuzedeel_id')->constrained('keuzedelen')->onDelete('cascade'); // Welk keuzedeel
+            $table->integer('periode');                // Voor welke periode
+            $table->string('status')->default('pending'); // pending, accepted, rejected
             $table->timestamps();
         });
     }

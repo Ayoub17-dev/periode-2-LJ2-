@@ -10,6 +10,8 @@ class Keuzedeel extends Model
 {
     use HasFactory;
 
+    protected $table = 'keuzedelen';
+
     protected $fillable = [
         'naam',
         'beschrijving',
