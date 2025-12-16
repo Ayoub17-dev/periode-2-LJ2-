@@ -15,6 +15,11 @@ class InschrijvingController extends Controller
         $user = Auth::user();
         $keuzedeel = Keuzedeel::findOrFail($keuzedeel_id);
 
+        // Check of student dit keuzedeel al gedaan heeft
+        if ($user->heeftKeuzedeelGedaan($keuzedeel->keuzedeelcode)) {
+            return redirect()->back()->with('error', 'Je hebt dit keuzedeel al eerder afgerond.');
+        }
+
         // Check 1: Is het keuzedeel vol?
         if ($keuzedeel->is_vol) {
             return back()->with('error', 'Dit keuzedeel is vol. Je kunt je niet meer inschrijven.');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Keuzedeel;
 use App\Models\Inschrijving;
 use App\Models\User;
+use App\Models\GedaanKeuzedeel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,12 +30,43 @@ class AdminController extends Controller
             'totaal_inschrijvingen' => Inschrijving::where('status', 'accepted')->count(),
             'totaal_studenten' => User::where('rol', 'student')->count(),
         ];
+        
+        // Statistieken per opleiding
+        $opleidingStats = Keuzedeel::selectRaw('opleiding, COUNT(*) as aantal')
+            ->whereNotNull('opleiding')
+            ->groupBy('opleiding')
+            ->get();
+        
+        // Populairste keuzedelen (op basis van inschrijvingen)
+        $populaireKeuzedelen = Keuzedeel::withCount(['inschrijvingen' => function($query) {
+                $query->where('status', 'accepted');
+            }])
+            ->orderByDesc('inschrijvingen_count')
+            ->take(5)
+            ->get();
+        
+        // Inschrijvingen per periode
+        $inschrijvingenPerPeriode = Keuzedeel::selectRaw('keuzedelen.periode, COUNT(inschrijvingen.id) as aantal')
+            ->leftJoin('inschrijvingen', function($join) {
+                $join->on('keuzedelen.id', '=', 'inschrijvingen.keuzedeel_id')
+                     ->where('inschrijvingen.status', '=', 'accepted');
+            })
+            ->groupBy('keuzedelen.periode')
+            ->orderBy('keuzedelen.periode')
+            ->get();
+        
+        // Recent ingeschreven studenten
+        $recenteInschrijvingen = Inschrijving::with(['user', 'keuzedeel'])
+            ->where('status', 'accepted')
+            ->latest()
+            ->take(10)
+            ->get();
 
-        return view('admin.index', compact('stats'));
+        return view('admin.index', compact('stats', 'opleidingStats', 'populaireKeuzedelen', 'inschrijvingenPerPeriode', 'recenteInschrijvingen'));
     }
 
     // Keuzedelen beheren
-    public function keuzedelen()
+    public function keuzedelenIndex()
     {
         $this->checkAdmin();
 
@@ -44,7 +76,7 @@ class AdminController extends Controller
     }
 
     // Nieuw keuzedeel formulier
-    public function createKeuzedeel()
+    public function keuzedelenCreate()
     {
         $this->checkAdmin();
 
@@ -52,35 +84,30 @@ class AdminController extends Controller
     }
 
     // Keuzedeel opslaan
-    public function storeKeuzedeel(Request $request)
+    public function keuzedelenStore(Request $request)
     {
         $this->checkAdmin();
 
-        $request->validate([
-            'code' => 'required|string|max:20',
+        $validated = $request->validate([
+            'code' => 'required|unique:keuzedelen',
+            'keuzedeelcode' => 'required|unique:keuzedelen|regex:/^\d{5}K\d{4}$/',
             'naam' => 'required|string|max:255',
             'beschrijving' => 'nullable|string',
-            'periode' => 'required|integer|min:1|max:4',
+            'periode' => 'required|integer|between:1,4',
             'max_studenten' => 'required|integer|min:1',
             'min_studenten' => 'required|integer|min:1',
         ]);
 
-        Keuzedeel::create([
-            'code' => $request->code,
-            'naam' => $request->naam,
-            'beschrijving' => $request->beschrijving,
-            'periode' => $request->periode,
-            'max_studenten' => $request->max_studenten,
-            'min_studenten' => $request->min_studenten,
-            'is_actief' => $request->has('is_actief'),
-            'herhaalbaar' => $request->has('herhaalbaar'),
-        ]);
+        $validated['is_actief'] = $request->has('is_actief');
+        $validated['herhaalbaar'] = $request->has('herhaalbaar');
+
+        Keuzedeel::create($validated);
 
         return redirect('/admin/keuzedelen')->with('success', 'Keuzedeel aangemaakt!');
     }
 
     // Keuzedeel bewerken formulier
-    public function editKeuzedeel($id)
+    public function keuzedelenEdit($id)
     {
         $this->checkAdmin();
 
@@ -90,7 +117,7 @@ class AdminController extends Controller
     }
 
     // Keuzedeel updaten
-    public function updateKeuzedeel(Request $request, $id)
+    public function keuzedelenUpdate(Request $request, $id)
     {
         $this->checkAdmin();
 
@@ -98,6 +125,7 @@ class AdminController extends Controller
 
         $request->validate([
             'code' => 'required|string|max:20',
+            'keuzedeelcode' => 'required|regex:/^\d{5}K\d{4}$/|unique:keuzedelen,keuzedeelcode,' . $id,
             'naam' => 'required|string|max:255',
             'beschrijving' => 'nullable|string',
             'periode' => 'required|integer|min:1|max:4',
@@ -107,6 +135,7 @@ class AdminController extends Controller
 
         $keuzedeel->update([
             'code' => $request->code,
+            'keuzedeelcode' => $request->keuzedeelcode,
             'naam' => $request->naam,
             'beschrijving' => $request->beschrijving,
             'periode' => $request->periode,
@@ -119,19 +148,21 @@ class AdminController extends Controller
         return redirect('/admin/keuzedelen')->with('success', 'Keuzedeel bijgewerkt!');
     }
 
-    // Keuzedeel verwijderen
-    public function deleteKeuzedeel($id)
+    // Toggle keuzedeel actief/inactief
+    public function keuzedelenToggle($id)
     {
         $this->checkAdmin();
 
         $keuzedeel = Keuzedeel::findOrFail($id);
-        $keuzedeel->delete();
+        $keuzedeel->is_actief = !$keuzedeel->is_actief;
+        $keuzedeel->save();
 
-        return redirect('/admin/keuzedelen')->with('success', 'Keuzedeel verwijderd!');
+        $status = $keuzedeel->is_actief ? 'geactiveerd' : 'gedeactiveerd';
+        return redirect('/admin/keuzedelen')->with('success', "Keuzedeel {$keuzedeel->naam} is {$status}!");
     }
 
     // Alle inschrijvingen bekijken
-    public function inschrijvingen()
+    public function inschrijvingenIndex()
     {
         $this->checkAdmin();
 
