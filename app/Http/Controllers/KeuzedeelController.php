@@ -7,18 +7,22 @@ use Illuminate\Http\Request;
 
 class KeuzedeelController extends Controller
 {
-    // Toon alle actieve keuzedelen
+    // Toon alle keuzedelen
     public function index(Request $request)
     {
-        // Haal alle actieve keuzedelen op
-        $query = Keuzedeel::where('is_actief', true);
-
-        // Filter op periode als die is opgegeven
-        if ($request->has('periode') && $request->periode != '') {
-            $query->where('periode', $request->periode);
-        }
-
-        $keuzedelen = $query->get();
+        $keuzedelen = Keuzedeel::withCount('inschrijvingen')
+            ->with(['inschrijvingen' => function($query) {
+                $query->where('status', 'accepted');
+            }])
+            ->where('is_actief', true)
+            ->orderBy('periode', 'asc')  // Sorteer op periode
+            ->orderBy('naam', 'asc')      // Dan op naam
+            ->get()
+            ->map(function($keuzedeel) {
+                $keuzedeel->aantal_inschrijvingen = $keuzedeel->inschrijvingen->where('status', 'accepted')->count();
+                $keuzedeel->is_vol = $keuzedeel->aantal_inschrijvingen >= $keuzedeel->max_studenten;
+                return $keuzedeel;
+            });
 
         return view('keuzedelen.index', compact('keuzedelen'));
     }
