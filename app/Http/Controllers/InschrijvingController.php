@@ -19,6 +19,11 @@ class InschrijvingController extends Controller
         if ($user->heeftKeuzedeelGedaan($keuzedeel->keuzedeelcode)) {
             return redirect()->back()->with('error', 'Je hebt dit keuzedeel al eerder afgerond.');
         }
+        
+        // Check of inschrijfperiode open is
+        if (!$keuzedeel->inschrijf_periode_open) {
+            return back()->with('error', 'De inschrijfperiode voor dit keuzedeel is gesloten.');
+        }
 
         // Check 1: Is het keuzedeel vol?
         if ($keuzedeel->is_vol) {
@@ -59,8 +64,15 @@ class InschrijvingController extends Controller
             'periode' => $keuzedeel->periode,
             'status' => 'accepted', // Direct geaccepteerd (wie eerst komt...)
         ]);
+        
+        // Check of minimum is bereikt
+        $message = 'Je bent ingeschreven voor ' . $keuzedeel->naam;
+        if (!$keuzedeel->heeftMinimumBereikt()) {
+            $aantalNodig = $keuzedeel->min_studenten - $keuzedeel->aantal_inschrijvingen;
+            $message .= '. Let op: dit keuzedeel heeft nog ' . $aantalNodig . ' inschrijvingen nodig om door te gaan.';
+        }
 
-        return redirect('/keuzedelen')->with('success', 'Je bent ingeschreven voor ' . $keuzedeel->naam . '!');
+        return redirect('/keuzedelen')->with('success', $message);
     }
 
     // Toon mijn inschrijvingen
