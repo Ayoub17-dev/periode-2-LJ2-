@@ -13,13 +13,15 @@ class Keuzedeel extends Model
     protected $table = 'keuzedelen';
 
     protected $fillable = [
-        'naam',
+        'code',
+        'keuzedeelcode',
+        'opleiding',
+        'naam', 
         'beschrijving',
-        'max_studenten',
-        'is_actief',
         'periode',
+        'max_studenten',
         'min_studenten',
-        'code'
+        'is_actief'
     ];
 
     protected $casts = [
