@@ -1,0 +1,379 @@
+/* TCR Custom Styling - Geïnspireerd op techniekcollegerotterdam.nl */
+
+:root {
+    /* TCR Officiële kleurpalette */
+    --tcr-primary: #0F4F30;
+    --tcr-primary-dark: #0B3A24;
+    --tcr-secondary: #C7D400;
+    --tcr-white: #FFFFFF;
+    --tcr-dark-gray: #1F1F1F;
+    --tcr-light-gray: #F2F2F2;
+    --tcr-gray: #6B6B6B;
+    --tcr-shadow: rgba(0, 0, 0, 0.08);
+    --tcr-shadow-hover: rgba(0, 0, 0, 0.12);
+}
+
+/* Typography - Professional */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--tcr-dark-gray);
+    line-height: 1.6;
+    font-size: 16px;
+    font-weight: 400;
+    background-color: var(--tcr-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--tcr-dark-gray);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+
+/* Hero Section - TCR Style */
+.hero-tcr {
+    background: linear-gradient(135deg, var(--tcr-primary) 0%, var(--tcr-primary-dark) 100%);
+    min-height: 400px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero-tcr::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+.hero-tcr::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff20" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,112C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+    background-size: cover;
+}
+
+.hero-content {
+    position: relative;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--tcr-secondary);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 1rem;
+}
+
+/* TCR Navigation exact zoals website */
+.nav-tcr {
+    background: var(--tcr-white);
+    border-bottom: 1px solid var(--tcr-light-gray);
+    box-shadow: 0 1px 3px var(--tcr-shadow);
+}
+
+.nav-logo {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--tcr-black);
+}
+
+.nav-link-tcr {
+    color: var(--tcr-dark-gray);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    text-decoration: none;
+}
+
+.nav-link-tcr:hover {
+    color: var(--tcr-primary);
+}
+
+.nav-link-tcr::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    right: 50%;
+    height: 3px;
+    background: var(--tcr-secondary);
+    transition: left 0.3s, right 0.3s;
+}
+
+.nav-link-tcr:hover::after {
+    left: 0;
+    right: 0;
+}
+
+/* TCR Cards zoals website */
+.card-tcr {
+    background: var(--tcr-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: all 0.2s ease;
+    border: 1px solid #e5e5e5;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-tcr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px var(--tcr-shadow-hover);
+    border-color: var(--tcr-primary);
+}
+
+.card-image-tcr {
+    position: relative;
+    padding-top: 56.25%;
+    background: linear-gradient(135deg, var(--tcr-primary), var(--tcr-primary-dark));
+    overflow: hidden;
+}
+
+.card-body-tcr {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title-tcr {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--tcr-black);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+.card-text-tcr {
+    color: #666;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    flex: 1;
+}
+
+/* Professional Buttons */
+.btn-tcr {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-tcr-primary {
+    background: var(--tcr-primary);
+    color: var(--tcr-white);
+}
+
+.btn-tcr-primary:hover {
+    background: var(--tcr-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(15, 79, 48, 0.3);
+}
+
+.btn-tcr-secondary {
+    background: var(--tcr-secondary);
+    color: var(--tcr-dark-gray);
+}
+
+.btn-tcr-secondary:hover {
+    background: #B8C500;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(199, 212, 0, 0.3);
+}
+
+.btn-tcr-outline {
+    background: transparent;
+    color: var(--tcr-primary);
+    border: 2px solid var(--tcr-primary);
+}
+
+.btn-tcr-outline:hover {
+    background: var(--tcr-primary);
+    color: var(--tcr-white);
+    box-shadow: 0 2px 8px rgba(15, 79, 48, 0.2);
+}
+
+.btn-tcr-white {
+    background: var(--tcr-white);
+    color: var(--tcr-black);
+}
+
+.btn-tcr-white:hover {
+    background: var(--tcr-light-gray);
+}
+
+/* TCR Badges en Labels */
+.badge-tcr {
+    padding: 0.375rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.badge-green {
+    background: var(--tcr-green);
+    color: var(--tcr-white);
+}
+
+.badge-gold {
+    background: var(--tcr-gold);
+    color: var(--tcr-black);
+}
+
+.badge-black {
+    background: var(--tcr-black);
+    color: var(--tcr-white);
+}
+
+.badge-red {
+    background: var(--tcr-red);
+    color: var(--tcr-white);
+}
+
+.badge-blue {
+    background: var(--tcr-blue);
+    color: var(--tcr-white);
+}
+
+/* Periode badges */
+.periode-1 { background: #4CAF50; color: white; }
+.periode-2 { background: #2196F3; color: white; }
+.periode-3 { background: #FF9800; color: white; }
+.periode-4 { background: #9C27B0; color: white; }
+
+/* Professional Footer */
+.footer-tcr {
+    background: var(--tcr-primary);
+    color: var(--tcr-white);
+    padding: 3rem 0 1.5rem;
+    margin-top: auto;
+}
+
+.footer-tcr a {
+    color: var(--tcr-white);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-tcr a:hover {
+    color: var(--tcr-secondary);
+    text-decoration: none;
+}
+
+/* Filter Section */
+.filter-section {
+    background: var(--tcr-light-gray);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.filter-button {
+    padding: 0.5rem 1rem;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 25px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.filter-button:hover {
+    border-color: var(--tcr-primary);
+    background: var(--tcr-primary);
+    color: var(--tcr-white);
+}
+
+.filter-button.active {
+    background: var(--tcr-primary);
+    color: var(--tcr-white);
+    border-color: var(--tcr-primary);
+}
+
+/* Professional Keuzedeel Card */
+.keuzedeel-card {
+    background: var(--tcr-white);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px var(--tcr-shadow);
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.keuzedeel-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--tcr-shadow-hover);
+}
+
+.keuzedeel-header {
+    background: linear-gradient(135deg, var(--tcr-primary), var(--tcr-primary-dark));
+    padding: 1.5rem;
+    position: relative;
+}
+
+.keuzedeel-code {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--tcr-secondary);
+    margin-bottom: 0.5rem;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    letter-spacing: 0.5px;
+}
+
+.keuzedeel-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--tcr-white);
+    letter-spacing: -0.25px;
+}
+
+/* Alert Styles */
+.alert-tcr-success {
+    background: #d4edda;
+    border-left: 4px solid #28a745;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.alert-tcr-error {
+    background: #f8d7da;
+    border-left: 4px solid #dc3545;
+    padding: 1rem;
+    border-radius: 4px;
+}
