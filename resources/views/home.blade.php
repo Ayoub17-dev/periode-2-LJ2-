@@ -1,166 +1,168 @@
 @extends('layouts.app')
 
-@section('title', 'Home')
+@section('title', 'Techniek College Rotterdam - Keuzedelen')
 
 @section('content')
-<!-- Hero Sectie -->
-<div class="hero-pattern text-white">
-    <div class="container mx-auto px-4 py-20">
-        <div class="max-w-4xl">
-            <h1 class="text-5xl font-bold mb-4">
-                Jouw toekomst is <span class="text-tcr-gold">goud waard</span>
+<!-- Professional Hero Section -->
+<div class="hero-tcr">
+    <div class="container mx-auto px-6">
+        <div class="relative z-10 py-24">
+            <h1 class="text-5xl font-bold text-white mb-6">
+                Keuzedelen <span style="color: #C7D400;">TCR</span>
             </h1>
-            <p class="text-xl mb-8 text-gray-100">
-                Kies het keuzedeel dat bij jou past en versterk je technische vaardigheden. 
-                Bij Techniek College Rotterdam investeren we in jouw toekomst.
+            <p class="text-xl text-white/90 mb-8 max-w-2xl">
+                Verbreed je vakkennis met onze keuzedelen. Maak een keuze die past bij jouw toekomst in de techniek.
             </p>
-            @guest
-                <div class="flex space-x-4">
-                    <a href="/login" class="bg-white text-tcr-green px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition duration-200">
-                        Inloggen om te starten
+            <div class="flex gap-4">
+                <a href="/keuzedelen" class="btn-tcr btn-tcr-secondary">
+                    BEKIJK KEUZEDELEN
+                </a>
+                @guest
+                    <a href="/register" class="btn-tcr btn-tcr-outline border-white text-white hover:bg-white" style="hover:color: #0F4F30;">
+                        REGISTREREN
                     </a>
-                    <a href="/register" class="gold-accent text-white px-6 py-3 rounded-lg font-bold hover:opacity-90 transition duration-200">
-                        Maak een account aan
+                @endguest
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Info Section -->
+<div class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="text-5xl font-bold" style="color: #0F4F30;">12</div>
+                <div class="text-gray-600">Keuzedelen</div>
+            </div>
+            <div class="text-center">
+                <div class="text-5xl font-bold" style="color: #0F4F30;">4</div>
+                <div class="text-gray-600">Periodes</div>
+            </div>
+            <div class="text-center">
+                <div class="text-5xl font-bold" style="color: #0F4F30;">30</div>
+                <div class="text-gray-600">Plaatsen per keuzedeel</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Waarom kiezen voor TCR -->
+<div class="container mx-auto px-4 py-16">
+    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Waarom kiezen voor TCR Keuzedelen?</h2>
+    
+    <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded shadow-sm border-t-4" style="border-color: #0F4F30;">
+            <h3 class="text-xl font-semibold mb-3 text-gray-800">Praktijkgericht</h3>
+            <p class="text-gray-600 leading-relaxed">
+                Alle keuzedelen zijn direct toepasbaar in de praktijk. Je werkt met de nieuwste technologieën en methodes uit het werkveld.
+            </p>
+        </div>
+        
+        <div class="bg-white p-6 rounded shadow-sm border-t-4" style="border-color: #C7D400;">
+            <h3 class="text-xl font-semibold mb-3 text-gray-800">Persoonlijke ontwikkeling</h3>
+            <p class="text-gray-600 leading-relaxed">
+                Kies keuzedelen die passen bij jouw interesses en carrièredoelen. Verdiep je in specialisaties die jou onderscheiden op de arbeidsmarkt.
+            </p>
+        </div>
+        
+        <div class="bg-white p-6 rounded shadow-sm border-t-4" style="border-color: #0F4F30;">
+            <h3 class="text-xl font-semibold mb-3 text-gray-800">Deskundige docenten</h3>
+            <p class="text-gray-600 leading-relaxed">
+                Leer van professionals uit het vakgebied met jarenlange ervaring. Zij delen hun kennis en netwerk met jou.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Keuzedelen -->
+<div class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">Uitgelichte Keuzedelen</h2>
+        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Een selectie van onze meest populaire keuzedelen voor periode 1
+        </p>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Card 1 -->
+            <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow">
+                <div class="p-4" style="background: linear-gradient(135deg, #0F4F30, #0B3A24);">
+                    <div class="text-2xl font-bold mb-1" style="color: #C7D400;">25604K0059</div>
+                    <h3 class="text-lg font-semibold text-white">Verdieping Software</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">Verdiep je kennis in geavanceerde programmeertechnieken en software architectuur.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm text-gray-500">Periode 1</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Beschikbaar</span>
+                    </div>
+                    <a href="/keuzedelen" class="text-blue-900 font-semibold hover:underline">
+                        Meer informatie
                     </a>
                 </div>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow">
+                <div class="p-4" style="background: linear-gradient(135deg, #0F4F30, #0B3A24);">
+                    <div class="text-2xl font-bold mb-1" style="color: #C7D400;">25604K0497</div>
+                    <h3 class="text-lg font-semibold text-white">Cybersecurity Fundamentals</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">Leer de basis van informatiebeveiliging en ethisch hacken.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm text-gray-500">Periode 1</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Beschikbaar</span>
+                    </div>
+                    <a href="/keuzedelen" class="font-semibold hover:underline" style="color: #0F4F30;">
+                        Meer informatie
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow">
+                <div class="p-4" style="background: linear-gradient(135deg, #0F4F30, #0B3A24);">
+                    <div class="text-2xl font-bold mb-1" style="color: #C7D400;">25604K0505</div>
+                    <h3 class="text-lg font-semibold text-white">Cloud Computing</h3>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">Werk met moderne cloud platforms en leer over cloud architectuur.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm text-gray-500">Periode 2</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Beschikbaar</span>
+                    </div>
+                    <a href="/keuzedelen" class="font-semibold hover:underline" style="color: #0F4F30;">
+                        Meer informatie
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="py-16" style="background: linear-gradient(135deg, #0F4F30, #0B3A24);">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">Start jouw toekomst bij TCR</h2>
+        <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            Schrijf je vandaag nog in voor een keuzedeel en ontwikkel de vaardigheden van morgen
+        </p>
+        
+        <div class="flex justify-center gap-4">
+            @guest
+                <a href="/register" class="btn-tcr btn-tcr-secondary">
+                    REGISTREREN
+                </a>
+                <a href="/login" class="btn-tcr btn-tcr-outline border-white text-white hover:bg-white" style="hover:color: #0F4F30;">
+                    INLOGGEN
+                </a>
             @else
-                <a href="/keuzedelen" class="gold-accent text-white px-8 py-4 rounded-lg font-bold text-lg hover:opacity-90 transition duration-200 inline-block">
-                    Bekijk alle keuzedelen →
+                <a href="/keuzedelen" class="btn-tcr btn-tcr-secondary">
+                    BEKIJK ALLE KEUZEDELEN
                 </a>
             @endguest
         </div>
-    </div>
-</div>
-
-<!-- Info Cards -->
-<div class="container mx-auto px-4 py-12">
-    <div class="grid md:grid-cols-3 gap-8 -mt-10">
-        <!-- Card 1 -->
-        <div class="bg-white rounded-lg shadow-xl p-6 border-t-4 border-tcr-gold">
-            <div class="w-12 h-12 bg-tcr-light-green rounded-lg flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-tcr-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
-            </div>
-            <h3 class="text-xl font-bold text-tcr-gray mb-2">Verdiep je kennis</h3>
-            <p class="text-gray-600">
-                Kies uit meer dan 20 verschillende keuzedelen om je technische kennis te verbreden.
-            </p>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="bg-white rounded-lg shadow-xl p-6 border-t-4 border-tcr-green">
-            <div class="w-12 h-12 bg-tcr-light-green rounded-lg flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-tcr-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </div>
-            <h3 class="text-xl font-bold text-tcr-gray mb-2">Simpele inschrijving</h3>
-            <p class="text-gray-600">
-                Schrijf je met één klik in voor je favoriete keuzedeel. Vol = vol, dus wees er snel bij!
-            </p>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="bg-white rounded-lg shadow-xl p-6 border-t-4 border-tcr-gold">
-            <div class="w-12 h-12 bg-tcr-light-green rounded-lg flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-tcr-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                </svg>
-            </div>
-            <h3 class="text-xl font-bold text-tcr-gray mb-2">Groei in je vakgebied</h3>
-            <p class="text-gray-600">
-                Ontwikkel jezelf met keuzedelen die perfect aansluiten bij jouw ambities en interesses.
-            </p>
-        </div>
-    </div>
-</div>
-
-<!-- Hoe het werkt -->
-<div class="bg-tcr-light-gray py-12">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center text-tcr-green mb-12">Hoe werkt het?</h2>
-        
-        <div class="grid md:grid-cols-4 gap-6">
-            <!-- Stap 1 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-tcr-green text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                    1
-                </div>
-                <h3 class="font-bold text-tcr-gray mb-2">Registreer</h3>
-                <p class="text-sm text-gray-600">Maak een account aan met je studentgegevens</p>
-            </div>
-
-            <!-- Stap 2 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-tcr-green text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                    2
-                </div>
-                <h3 class="font-bold text-tcr-gray mb-2">Bekijk</h3>
-                <p class="text-sm text-gray-600">Ontdek alle beschikbare keuzedelen per periode</p>
-            </div>
-
-            <!-- Stap 3 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-tcr-green text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                    3
-                </div>
-                <h3 class="font-bold text-tcr-gray mb-2">Kies</h3>
-                <p class="text-sm text-gray-600">Selecteer het keuzedeel dat bij jou past</p>
-            </div>
-
-            <!-- Stap 4 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-tcr-gold text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                    4
-                </div>
-                <h3 class="font-bold text-tcr-gray mb-2">Schrijf in</h3>
-                <p class="text-sm text-gray-600">Bevestig je keuze en start je leertraject</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Belangrijke info -->
-<div class="container mx-auto px-4 py-12">
-    <div class="bg-white rounded-lg shadow-lg p-8">
-        <h2 class="text-2xl font-bold text-tcr-green mb-6">Belangrijke informatie</h2>
-        
-        <div class="grid md:grid-cols-2 gap-8">
-            <div>
-                <h3 class="font-bold text-tcr-gray mb-3 flex items-center">
-                    <span class="w-2 h-2 bg-tcr-gold rounded-full mr-2"></span>
-                    Inschrijfregels
-                </h3>
-                <ul class="space-y-2 text-gray-600 ml-4">
-                    <li>✓ Maximaal 30 studenten per keuzedeel</li>
-                    <li>✓ Minimaal 15 studenten om te starten</li>
-                    <li>✓ Vol = vol (first come, first served)</li>
-                    <li>✓ 1 keuzedeel per periode</li>
-                </ul>
-            </div>
-
-            <div>
-                <h3 class="font-bold text-tcr-gray mb-3 flex items-center">
-                    <span class="w-2 h-2 bg-tcr-gold rounded-full mr-2"></span>
-                    Voor studenten
-                </h3>
-                <ul class="space-y-2 text-gray-600 ml-4">
-                    <li>✓ Bekijk alle beschikbare keuzedelen</li>
-                    <li>✓ Lees uitgebreide beschrijvingen</li>
-                    <li>✓ Volg je inschrijfstatus</li>
-                    <li>✓ Check je voortgang</li>
-                </ul>
-            </div>
-        </div>
-
-        @guest
-            <div class="mt-8 p-4 bg-tcr-light-green rounded-lg border-l-4 border-tcr-green">
-                <p class="text-tcr-green font-semibold">
-                    Klaar om te beginnen? Log in met je studentaccount om je in te schrijven voor keuzedelen.
-                </p>
-            </div>
-        @endguest
     </div>
 </div>
 @endsection
