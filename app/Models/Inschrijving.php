@@ -18,13 +18,6 @@ class Inschrijving extends Model
         'keuzedeel_id',
         'periode',
         'status',
-        'motivatie',
-        'voorkennis',
-        'telefoon',
-        'niveau',
-        'leerdoelen',
-        'aanwezig_info',
-        'opmerkingen',
     ];
 
     public function user()
