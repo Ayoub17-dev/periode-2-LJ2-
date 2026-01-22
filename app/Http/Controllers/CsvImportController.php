@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\GedaanKeuzedeel;
 use App\Models\Keuzedeel;
+use App\Models\Inschrijving;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -47,7 +48,7 @@ class CsvImportController extends Controller
         }
 
         return redirect()->back()->with('success', 
-            "Import succesvol! $totalStudenten studenten en $totalKeuzedelen gedane keuzedelen toegevoegd."
+            "Import succesvol! $totalStudenten studenten en $totalKeuzedelen keuzedeel-inschrijvingen toegevoegd."
         );
     }
 
@@ -118,24 +119,46 @@ class CsvImportController extends Controller
             );
             $studenten++;
 
-            // Check gedane keuzedelen
+            // Check gedane keuzedelen en maak inschrijvingen
             foreach ($keuzedeelCodes as $index => $keuzedeelcode) {
                 $cijfer = trim($data[$index] ?? '');
                 
-                // Check of het een geldig cijfer is (nummer) en niet pv, x, of leeg
-                if (!empty($cijfer) && is_numeric($cijfer)) {
-                    GedaanKeuzedeel::updateOrCreate(
-                        [
-                            'user_id' => $user->id,
-                            'keuzedeelcode' => $keuzedeelcode
-                        ],
-                        [
-                            'naam' => 'Keuzedeel ' . $keuzedeelcode,
-                            'cijfer' => $cijfer,
-                            'status' => 'afgerond'
-                        ]
-                    );
-                    $keuzedelen++;
+                // Check of er een waarde is (cijfer of andere marker)
+                if (!empty($cijfer)) {
+                    // Zoek het keuzedeel in de database
+                    $keuzedeel = Keuzedeel::where('keuzedeelcode', $keuzedeelcode)->first();
+                    
+                    if ($keuzedeel) {
+                        // Maak inschrijving aan voor deze student
+                        Inschrijving::updateOrCreate(
+                            [
+                                'user_id' => $user->id,
+                                'keuzedeel_id' => $keuzedeel->id
+                            ],
+                            [
+                                'status' => 'accepted',
+                                'periode' => $keuzedeel->periode
+                            ]
+                        );
+                        
+                        // Als het een cijfer is, sla het ook op in gedane_keuzedelen
+                        if (is_numeric($cijfer)) {
+                            GedaanKeuzedeel::updateOrCreate(
+                                [
+                                    'user_id' => $user->id,
+                                    'keuzedeelcode' => $keuzedeelcode
+                                ],
+                                [
+                                    'naam' => $keuzedeel->naam,
+                                    'cijfer' => $cijfer,
+                                    'status' => 'afgerond',
+                                    'datum_afgerond' => now()
+                                ]
+                            );
+                        }
+                        
+                        $keuzedelen++;
+                    }
                 }
             }
         }
@@ -148,9 +171,10 @@ class CsvImportController extends Controller
     {
         $this->checkAdmin();
         
-        // Verwijder alle gedane keuzedelen
+        // Verwijder alle inschrijvingen en gedane keuzedelen
+        Inschrijving::truncate();
         GedaanKeuzedeel::truncate();
         
-        return redirect()->back()->with('success', 'Alle oude inschrijfgegevens zijn verwijderd.');
+        return redirect()->back()->with('success', 'Alle oude inschrijvingen en cijfers zijn verwijderd.');
     }
 }

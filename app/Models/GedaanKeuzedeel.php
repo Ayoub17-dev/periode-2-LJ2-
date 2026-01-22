@@ -29,4 +29,10 @@ class GedaanKeuzedeel extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // Relatie met keuzedeel via keuzedeelcode
+    public function keuzedeel()
+    {
+        return $this->belongsTo(Keuzedeel::class, 'keuzedeelcode', 'keuzedeelcode');
+    }
 }

@@ -21,13 +21,19 @@ class Keuzedeel extends Model
         'periode',
         'max_studenten',
         'min_studenten',
-        'is_actief'
+        'is_actief',
+        'inschrijving_open',
+        'inschrijving_start',
+        'inschrijving_eind'
     ];
 
     protected $casts = [
         'is_actief' => 'boolean',
+        'inschrijving_open' => 'boolean',
         'max_studenten' => 'integer',
-        'min_studenten' => 'integer'
+        'min_studenten' => 'integer',
+        'inschrijving_start' => 'datetime',
+        'inschrijving_eind' => 'datetime'
     ];
 
     public function inschrijvingen()
@@ -46,6 +52,30 @@ class Keuzedeel extends Model
     }
 
     public function getKanStartenAttribute()
+    {
+        return $this->aantal_inschrijvingen >= $this->min_studenten;
+    }
+    
+    public function getInschrijfPeriodeOpenAttribute()
+    {
+        if (!$this->inschrijving_open) {
+            return false;
+        }
+        
+        $now = now();
+        
+        if ($this->inschrijving_start && $now < $this->inschrijving_start) {
+            return false;
+        }
+        
+        if ($this->inschrijving_eind && $now > $this->inschrijving_eind) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public function heeftMinimumBereikt()
     {
         return $this->aantal_inschrijvingen >= $this->min_studenten;
     }
