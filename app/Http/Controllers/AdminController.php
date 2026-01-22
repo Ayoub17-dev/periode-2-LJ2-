@@ -24,45 +24,39 @@ class AdminController extends Controller
     {
         $this->checkAdmin();
 
-        $stats = [
-            'totaal_keuzedelen' => Keuzedeel::count(),
-            'actieve_keuzedelen' => Keuzedeel::where('is_actief', true)->count(),
-            'totaal_inschrijvingen' => Inschrijving::where('status', 'accepted')->count(),
-            'totaal_studenten' => User::where('rol', 'student')->count(),
-        ];
-        
-        // Statistieken per opleiding
-        $opleidingStats = Keuzedeel::selectRaw('opleiding, COUNT(*) as aantal')
-            ->whereNotNull('opleiding')
-            ->groupBy('opleiding')
+        $totalKeuzedelen = Keuzedeel::count();
+        $actieveKeuzedelen = Keuzedeel::where('is_actief', true)->count();
+        $totalInschrijvingen = Inschrijving::count();
+        $totalStudenten = User::where('rol', 'student')->count();
+        $recenteInschrijvingen = Inschrijving::with(['user', 'keuzedeel'])
+            ->orderBy('created_at', 'desc')
+            ->take(10)
             ->get();
-        
-        // Populairste keuzedelen (op basis van inschrijvingen)
-        $populaireKeuzedelen = Keuzedeel::withCount(['inschrijvingen' => function($query) {
-                $query->where('status', 'accepted');
-            }])
-            ->orderByDesc('inschrijvingen_count')
-            ->take(5)
-            ->get();
-        
-        // Inschrijvingen per periode
-        $inschrijvingenPerPeriode = Keuzedeel::selectRaw('keuzedelen.periode, COUNT(inschrijvingen.id) as aantal')
-            ->leftJoin('inschrijvingen', function($join) {
-                $join->on('keuzedelen.id', '=', 'inschrijvingen.keuzedeel_id')
-                     ->where('inschrijvingen.status', '=', 'accepted');
-            })
+            
+        $inschrijvingenPerPeriode = Keuzedeel::selectRaw('keuzedelen.periode, COUNT(DISTINCT keuzedelen.id) as keuzedelen_count, COUNT(inschrijvingen.id) as inschrijvingen_count')
+            ->leftJoin('inschrijvingen', 'keuzedelen.id', '=', 'inschrijvingen.keuzedeel_id')
             ->groupBy('keuzedelen.periode')
             ->orderBy('keuzedelen.periode')
             ->get();
-        
-        // Recent ingeschreven studenten
-        $recenteInschrijvingen = Inschrijving::with(['user', 'keuzedeel'])
-            ->where('status', 'accepted')
-            ->latest()
-            ->take(10)
+            
+        // Studenten met keuzedeel keuzes
+        $studentenKeuzes = Inschrijving::with(['user', 'keuzedeel'])
+            ->whereHas('user', function($query) {
+                $query->where('rol', 'student');
+            })
+            ->orderBy('created_at', 'desc')
             ->get();
+        
 
-        return view('admin.index', compact('stats', 'opleidingStats', 'populaireKeuzedelen', 'inschrijvingenPerPeriode', 'recenteInschrijvingen'));
+        return view('admin.index', compact(
+            'totalKeuzedelen',
+            'actieveKeuzedelen', 
+            'totalInschrijvingen',
+            'totalStudenten',
+            'recenteInschrijvingen',
+            'inschrijvingenPerPeriode',
+            'studentenKeuzes'
+        ));
     }
 
     // Keuzedelen beheren
@@ -96,10 +90,13 @@ class AdminController extends Controller
             'periode' => 'required|integer|between:1,4',
             'max_studenten' => 'required|integer|min:1',
             'min_studenten' => 'required|integer|min:1',
+            'inschrijving_start' => 'nullable|date',
+            'inschrijving_eind' => 'nullable|date|after:inschrijving_start'
         ]);
 
         $validated['is_actief'] = $request->has('is_actief');
         $validated['herhaalbaar'] = $request->has('herhaalbaar');
+        $validated['inschrijving_open'] = $request->has('inschrijving_open');
 
         Keuzedeel::create($validated);
 
@@ -131,6 +128,8 @@ class AdminController extends Controller
             'periode' => 'required|integer|min:1|max:4',
             'max_studenten' => 'required|integer|min:1',
             'min_studenten' => 'required|integer|min:1',
+            'inschrijving_start' => 'nullable|date',
+            'inschrijving_eind' => 'nullable|date|after:inschrijving_start'
         ]);
 
         $keuzedeel->update([
@@ -143,6 +142,9 @@ class AdminController extends Controller
             'min_studenten' => $request->min_studenten,
             'is_actief' => $request->has('is_actief'),
             'herhaalbaar' => $request->has('herhaalbaar'),
+            'inschrijving_open' => $request->has('inschrijving_open'),
+            'inschrijving_start' => $request->inschrijving_start,
+            'inschrijving_eind' => $request->inschrijving_eind
         ]);
 
         return redirect('/admin/keuzedelen')->with('success', 'Keuzedeel bijgewerkt!');
