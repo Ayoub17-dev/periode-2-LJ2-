@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class KeuzedeelController extends Controller
 {
-    // Toon alle keuzedelen
+    // Keuzedelen lijst
     public function index(Request $request)
     {
         $keuzedelen = Keuzedeel::withCount('inschrijvingen')
@@ -15,8 +15,8 @@ class KeuzedeelController extends Controller
                 $query->where('status', 'accepted');
             }])
             ->where('is_actief', true)
-            ->orderBy('periode', 'asc')  // Sorteer op periode
-            ->orderBy('naam', 'asc')      // Dan op naam
+            ->orderBy('periode', 'asc')
+            ->orderBy('naam', 'asc')
             ->get()
             ->map(function($keuzedeel) {
                 $keuzedeel->aantal_inschrijvingen = $keuzedeel->inschrijvingen->where('status', 'accepted')->count();
@@ -27,7 +27,7 @@ class KeuzedeelController extends Controller
         return view('keuzedelen.index', compact('keuzedelen'));
     }
 
-    // Toon details van 1 keuzedeel
+    // Keuzedeel details
     public function show($id)
     {
         $keuzedeel = Keuzedeel::findOrFail($id);

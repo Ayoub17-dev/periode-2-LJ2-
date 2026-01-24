@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class CsvImportController extends Controller
 {
-    // Check of gebruiker admin is
+    // Admin check
     private function checkAdmin()
     {
         if (!Auth::user()->isAdmin()) {
@@ -21,14 +21,14 @@ class CsvImportController extends Controller
         }
     }
 
-    // Toon upload pagina
+    // Upload pagina
     public function index()
     {
         $this->checkAdmin();
         return view('admin.csv-import');
     }
 
-    // Verwerk CSV upload
+    // CSV verwerken
     public function upload(Request $request)
     {
         $this->checkAdmin();
@@ -52,13 +52,13 @@ class CsvImportController extends Controller
         );
     }
 
-    // Verwerk een CSV bestand (specifiek voor TCR Excel export format)
+    // CSV verwerking
     private function processCSV($file)
     {
         $studenten = 0;
         $keuzedelen = 0;
 
-        // Open CSV bestand
+        // CSV openen
         $content = file_get_contents($file);
         $lines = explode("\n", $content);
         
@@ -66,28 +66,27 @@ class CsvImportController extends Controller
             return ['studenten' => 0, 'keuzedelen' => 0];
         }
 
-        // Rij 5 (index 4) bevat de keuzedeelcodes
+        // Keuzedeelcodes rij
         $keuzedeelRow = str_getcsv($lines[4], ',');
         
-        // Vind alle keuzedeelcodes en hun kolom posities
-        // Elke keuzedeel heeft 4 kolommen: Res (cijfer), SP, Gepln, TotSP
+        // Keuzedeelcodes vinden
         $keuzedeelCodes = [];
         
         for ($i = 0; $i < count($keuzedeelRow); $i++) {
             $code = trim($keuzedeelRow[$i]);
-            // Match keuzedeelcodes zoals 25604K0059 of K0205
+            // Code matching
             if (preg_match('/^\d{5}K\d{4}$/', $code) || preg_match('/^K\d{4}$/', $code)) {
                 $keuzedeelCodes[$i] = $code;
             }
         }
 
-        // Verwerk elke student rij (vanaf rij 8, index 7)
+        // Student rijen verwerken
         for ($row = 7; $row < count($lines); $row++) {
             $data = str_getcsv($lines[$row], ',');
             
             if (count($data) < 5) continue;
 
-            // Kolom indeling: 
+            // Kolom info: 
             // 1 = Roostergroep (klas)
             // 2 = studentnummer
             // 3 = naam
@@ -97,15 +96,15 @@ class CsvImportController extends Controller
             $naam = trim($data[3] ?? '');
             $opleiding = trim($data[4] ?? '');
 
-            // Skip lege rijen of rijen zonder studentnummer
+            // Lege rijen skippen
             if (empty($studentnummer) || !is_numeric($studentnummer)) continue;
 
-            // Genereer email op basis van naam
+            // Email genereren
             $emailNaam = strtolower(str_replace(' ', '.', $naam));
             $emailNaam = preg_replace('/[^a-z0-9.]/', '', $emailNaam);
             $email = $emailNaam . '@student.tcr.nl';
 
-            // Maak of update student
+            // Student aanmaken/updaten
             $user = User::updateOrCreate(
                 ['studentnummer' => $studentnummer],
                 [
@@ -119,17 +118,17 @@ class CsvImportController extends Controller
             );
             $studenten++;
 
-            // Check gedane keuzedelen en maak inschrijvingen
+            // Keuzedelen verwerken
             foreach ($keuzedeelCodes as $index => $keuzedeelcode) {
                 $cijfer = trim($data[$index] ?? '');
                 
-                // Check of er een waarde is (cijfer of andere marker)
+                // Waarde check
                 if (!empty($cijfer)) {
-                    // Zoek het keuzedeel in de database
+                    // Keuzedeel zoeken
                     $keuzedeel = Keuzedeel::where('keuzedeelcode', $keuzedeelcode)->first();
                     
                     if ($keuzedeel) {
-                        // Maak inschrijving aan voor deze student
+                        // Inschrijving maken
                         Inschrijving::updateOrCreate(
                             [
                                 'user_id' => $user->id,
@@ -141,7 +140,7 @@ class CsvImportController extends Controller
                             ]
                         );
                         
-                        // Als het een cijfer is, sla het ook op in gedane_keuzedelen
+                        // Cijfer opslaan
                         if (is_numeric($cijfer)) {
                             GedaanKeuzedeel::updateOrCreate(
                                 [
@@ -166,7 +165,7 @@ class CsvImportController extends Controller
         return ['studenten' => $studenten, 'keuzedelen' => $keuzedelen];
     }
 
-    // Verwijder alle oude inschrijvingen
+    // Data verwijderen
     public function deleteOldInschrijvingen()
     {
         $this->checkAdmin();

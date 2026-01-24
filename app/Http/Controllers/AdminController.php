@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    // Check of gebruiker admin is
+    // Admin check
     private function checkAdmin()
     {
         if (!Auth::user()->isAdmin()) {
@@ -19,7 +19,7 @@ class AdminController extends Controller
         }
     }
 
-    // Admin dashboard
+    // Dashboard
     public function index()
     {
         $this->checkAdmin();
@@ -39,7 +39,7 @@ class AdminController extends Controller
             ->orderBy('keuzedelen.periode')
             ->get();
             
-        // Studenten met keuzedeel keuzes
+        // Student keuzes
         $studentenKeuzes = Inschrijving::with(['user', 'keuzedeel'])
             ->whereHas('user', function($query) {
                 $query->where('rol', 'student');
@@ -59,7 +59,7 @@ class AdminController extends Controller
         ));
     }
 
-    // Keuzedelen beheren
+    // Keuzedelen lijst
     public function keuzedelenIndex()
     {
         $this->checkAdmin();
@@ -69,7 +69,7 @@ class AdminController extends Controller
         return view('admin.keuzedelen.index', compact('keuzedelen'));
     }
 
-    // Nieuw keuzedeel formulier
+    // Nieuw keuzedeel
     public function keuzedelenCreate()
     {
         $this->checkAdmin();
@@ -103,7 +103,7 @@ class AdminController extends Controller
         return redirect('/admin/keuzedelen')->with('success', 'Keuzedeel aangemaakt!');
     }
 
-    // Keuzedeel bewerken formulier
+    // Keuzedeel bewerken
     public function keuzedelenEdit($id)
     {
         $this->checkAdmin();
@@ -150,7 +150,7 @@ class AdminController extends Controller
         return redirect('/admin/keuzedelen')->with('success', 'Keuzedeel bijgewerkt!');
     }
 
-    // Toggle keuzedeel actief/inactief
+    // Keuzedeel toggle
     public function keuzedelenToggle($id)
     {
         $this->checkAdmin();
@@ -163,7 +163,7 @@ class AdminController extends Controller
         return redirect('/admin/keuzedelen')->with('success', "Keuzedeel {$keuzedeel->naam} is {$status}!");
     }
 
-    // Alle inschrijvingen bekijken
+    // Inschrijvingen lijst
     public function inschrijvingenIndex()
     {
         $this->checkAdmin();
@@ -172,7 +172,7 @@ class AdminController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Groepeer per keuzedeel voor overzicht
+        // Groepering per keuzedeel
         $perKeuzedeel = Inschrijving::with(['user', 'keuzedeel'])
             ->where('status', 'accepted')
             ->get()

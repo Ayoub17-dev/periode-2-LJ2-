@@ -9,43 +9,42 @@ use Illuminate\Support\Facades\Auth;
 
 class InschrijvingController extends Controller
 {
-    // Schrijf een student in voor een keuzedeel
+    // Student inschrijven
     public function inschrijven($keuzedeel_id)
     {
         $user = Auth::user();
         $keuzedeel = Keuzedeel::findOrFail($keuzedeel_id);
 
-        // Check of student dit keuzedeel al gedaan heeft
+        // Check keuzedeel gedaan
         if ($user->heeftKeuzedeelGedaan($keuzedeel->keuzedeelcode)) {
             return redirect()->back()->with('error', 'Je hebt dit keuzedeel al eerder afgerond.');
         }
         
-        // Check of inschrijfperiode open is
+        // Check inschrijfperiode
         if (!$keuzedeel->inschrijf_periode_open) {
             return back()->with('error', 'De inschrijfperiode voor dit keuzedeel is gesloten.');
         }
 
-        // Check 1: Is het keuzedeel vol?
+        // Check 1: Vol?
         if ($keuzedeel->is_vol) {
             return back()->with('error', 'Dit keuzedeel is vol. Je kunt je niet meer inschrijven.');
         }
 
-        // Check 2: Is het keuzedeel actief?
+        // Check 2: Actief?
         if (!$keuzedeel->is_actief) {
             return back()->with('error', 'Dit keuzedeel is niet actief.');
         }
 
-        // Check 3: Is de student al ingeschreven voor een keuzedeel in deze periode?
+        // Check 3: Al gekozen?
         $bestaandeInschrijving = Inschrijving::where('user_id', $user->id)
-            ->where('periode', $keuzedeel->periode)
             ->where('status', '!=', 'rejected')
             ->first();
 
         if ($bestaandeInschrijving) {
-            return back()->with('error', 'Je bent al ingeschreven voor een keuzedeel in periode ' . $keuzedeel->periode);
+            return back()->with('error', 'Je hebt al een keuzedeel gekozen. Je kunt maar één keuzedeel kiezen.');
         }
 
-        // Check 4: Heeft de student dit keuzedeel al gedaan? (alleen als niet herhaalbaar)
+        // Check 4: Al gedaan?
         if (!$keuzedeel->herhaalbaar) {
             $alGedaan = Inschrijving::where('user_id', $user->id)
                 ->where('keuzedeel_id', $keuzedeel->id)
@@ -57,15 +56,15 @@ class InschrijvingController extends Controller
             }
         }
 
-        // Alles ok, maak de inschrijving aan
+        // Inschrijving maken
         Inschrijving::create([
             'user_id' => $user->id,
             'keuzedeel_id' => $keuzedeel->id,
             'periode' => $keuzedeel->periode,
-            'status' => 'accepted', // Direct geaccepteerd (wie eerst komt...)
+            'status' => 'accepted'
         ]);
         
-        // Check of minimum is bereikt
+        // Check minimum
         $message = 'Je bent ingeschreven voor ' . $keuzedeel->naam;
         if (!$keuzedeel->heeftMinimumBereikt()) {
             $aantalNodig = $keuzedeel->min_studenten - $keuzedeel->aantal_inschrijvingen;
@@ -75,7 +74,7 @@ class InschrijvingController extends Controller
         return redirect('/keuzedelen')->with('success', $message);
     }
 
-    // Toon mijn inschrijvingen
+    // Mijn inschrijvingen
     public function mijnInschrijvingen()
     {
         $inschrijvingen = Inschrijving::where('user_id', Auth::id())
