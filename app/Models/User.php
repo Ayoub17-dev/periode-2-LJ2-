@@ -25,6 +25,7 @@ class User extends Authenticatable
         'rol',
         'opleiding',
         'klas',
+        'microsoft_id',
     ];
 
     public function inschrijvingen()
@@ -32,9 +33,20 @@ class User extends Authenticatable
         return $this->hasMany(Inschrijving::class);
     }
 
+    public function gedaneKeuzedelen()
+    {
+        return $this->hasMany(GedaanKeuzedeel::class);
+    }
+
     public function isAdmin()
     {
         return $this->rol === 'admin';
+    }
+
+    // Check of student keuzedeel al gedaan heeft
+    public function heeftKeuzedeelGedaan($keuzedeelcode)
+    {
+        return $this->gedaneKeuzedelen()->where('keuzedeelcode', $keuzedeelcode)->exists();
     }
 
     public function isStudent()

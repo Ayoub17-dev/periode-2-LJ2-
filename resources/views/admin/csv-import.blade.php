@@ -8,7 +8,7 @@
     <div class="container mx-auto px-6">
         <div class="py-16">
             <h1 class="text-4xl font-bold text-white mb-4">CSV Import</h1>
-            <p class="text-lg text-white/90">Upload CSV bestanden om studenten en hun gedane keuzedelen in te lezen</p>
+            <p class="text-lg text-white/90">Upload CSV bestanden om studenten en hun keuzedeel-inschrijvingen in te lezen</p>
         </div>
     </div>
 </div>
@@ -90,7 +90,7 @@
                         <li>• Kolom C: Studentnummer</li>
                         <li>• Kolom D: Naam student</li>
                         <li>• Kolom E: Opleidingscode</li>
-                        <li>• Vanaf kolom H: Keuzedeel cijfers</li>
+                        <li>• Vanaf kolom H: Keuzedeel cijfers/keuzes</li>
                     </ul>
                 </div>
 
@@ -98,7 +98,8 @@
                     <h3 class="font-bold mb-2" style="color: #1F1F1F;">Wat gebeurt er?</h3>
                     <ul class="text-sm space-y-1 ml-4" style="color: #6B6B6B;">
                         <li>• Studenten worden aangemaakt/bijgewerkt</li>
-                        <li>• Cijfers worden opgeslagen als gedane keuzedelen</li>
+                        <li>• Inschrijvingen worden direct aangemaakt</li>
+                        <li>• Cijfers worden opgeslagen (indien aanwezig)</li>
                         <li>• Wachtwoord = studentnummer</li>
                         <li>• Email = naam@student.tcr.nl</li>
                     </ul>
@@ -114,7 +115,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <h3 class="font-bold" style="color: #1F1F1F;">Verwijder alle oude inschrijfdata</h3>
-                <p class="text-sm" style="color: #6B6B6B;">Dit verwijdert alle opgeslagen informatie over gedane keuzedelen</p>
+                <p class="text-sm" style="color: #6B6B6B;">Dit verwijdert alle inschrijvingen en cijfers</p>
             </div>
             
             <form action="/admin/csv-import/delete-old" method="POST" onsubmit="return confirm('Weet je zeker dat je alle oude data wilt verwijderen?')">

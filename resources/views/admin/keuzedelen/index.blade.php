@@ -44,7 +44,7 @@
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex space-x-2">
-                                <a href="/admin/keuzedelen/{{ $keuzedeel->id }}/bewerk" 
+                                <a href="/admin/keuzedelen/{{ $keuzedeel->id }}/edit" 
                                    class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
                                     Bewerk
                                 </a>

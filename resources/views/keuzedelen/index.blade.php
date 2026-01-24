@@ -40,6 +40,17 @@
         </h2>
     </div>
 
+    <!-- Hero Image Section -->
+    <div class="mb-12 rounded-xl overflow-hidden shadow-lg">
+        <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80" 
+             alt="Studenten in technische omgeving" 
+             class="w-full h-64 object-cover">
+        <div class="bg-white p-6">
+            <h3 class="text-xl font-bold mb-2" style="color: #0F4F30;">Kies je Keuzedeel</h3>
+            <p style="color: #6B6B6B;">Ontdek welke keuzedelen het beste bij jouw interesses en carrièredoelen passen. Alle keuzedelen zijn praktijkgericht en direct toepasbaar in het werkveld.</p>
+        </div>
+    </div>
+
     <!-- Keuzedelen Grid zoals TCR -->
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="keuzedelen-grid">
         @forelse ($keuzedelen as $keuzedeel)
@@ -112,6 +123,10 @@
                             @elseif(Auth::user()->inschrijvingen->where('keuzedeel_id', $keuzedeel->id)->first())
                                 <button class="btn-tcr btn-tcr-secondary w-full" disabled>
                                     Ingeschreven
+                                </button>
+                            @elseif(Auth::user()->inschrijvingen->count() >= 1)
+                                <button class="btn-tcr btn-tcr-outline w-full" disabled>
+                                    Je hebt al een keuzedeel gekozen
                                 </button>
                             @else
                                 <form action="{{ route('inschrijvingen.create', $keuzedeel->id) }}" method="POST">

@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InschrijvingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CsvImportController;
+use App\Http\Controllers\MicrosoftAuthController;
 
 // Home pagina
 Route::get('/', function () {
@@ -22,6 +23,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+    
+    // Microsoft OAuth routes
+    Route::get('/auth/microsoft', [MicrosoftAuthController::class, 'redirectToMicrosoft'])->name('microsoft.login');
+    Route::get('/auth/microsoft/callback', [MicrosoftAuthController::class, 'handleMicrosoftCallback'])->name('microsoft.callback');
 });
 
 // Routes ingelogd 
