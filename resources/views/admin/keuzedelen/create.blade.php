@@ -23,9 +23,31 @@
 
             <!-- Code -->
             <div class="mb-4">
-                <label for="code" class="block text-gray-700 font-semibold mb-2">Keuzedeel Code *</label>
-                <input type="text" id="code" name="code" value="{{ old('code') }}"
-                       class="w-full border rounded px-3 py-2" placeholder="Bijv: K0001" required>
+                <label for="code" class="block text-gray-700 font-semibold mb-2">Code</label>
+                <input type="text" 
+                       id="code" 
+                       name="code" 
+                       value="{{ old('code') }}"
+                       class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+                       placeholder="Bijv: KD001"
+                       required>
+            </div>
+
+            <!-- Keuzedeelcode (VERPLICHT) -->
+            <div class="mb-4">
+                <label for="keuzedeelcode" class="block text-gray-700 font-semibold mb-2">
+                    Keuzedeelcode <span class="text-red-500">*</span>
+                </label>
+                <input type="text" 
+                       id="keuzedeelcode" 
+                       name="keuzedeelcode" 
+                       value="{{ old('keuzedeelcode') }}"
+                       class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+                       placeholder="Bijv: 25604K0059"
+                       pattern="^\d{5}K\d{4}$"
+                       title="Format: 5 cijfers, letter K, 4 cijfers (bijv: 25604K0059)"
+                       required>
+                <p class="text-sm text-gray-500 mt-1">Format: XXXXXKXXXX (bijv: 25604K0059)</p>
             </div>
 
             <!-- Naam -->

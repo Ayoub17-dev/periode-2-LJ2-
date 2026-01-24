@@ -87,12 +87,20 @@
                     </div>
                     
                     <!-- Submit Button -->
-                    <button type="submit" class="w-full btn-tcr-primary py-3 text-lg">
-                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                        </svg>
-                        Inloggen
+                    <button type="submit" class="w-full btn-tcr btn-tcr-primary py-3 mb-4">
+                        INLOGGEN
                     </button>
+                    
+                    <div class="text-center mb-4">
+                        <span class="text-sm" style="color: #6B6B6B;">of</span>
+                    </div>
+                    
+                    <a href="{{ route('microsoft.login') }}" class="w-full btn-tcr btn-tcr-secondary py-3 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/>
+                        </svg>
+                        INLOGGEN MET MICROSOFT
+                    </a>
                 </form>
                 
                 <!-- Divider -->
